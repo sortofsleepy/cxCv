@@ -40,6 +40,8 @@ namespace cxCv {
         //raw points fround from the findCountours operation
         std::vector<std::vector<cv::Point> > points;
         
+        //stores the contours found at each request.
+        std::vector<std::vector<cv::Point> > allcontours;
     public:
         Contours();
         static ContourRef create(){
@@ -59,7 +61,7 @@ namespace cxCv {
         /**
          Finds the contours of a image.
         */
-        void findContours(ci::Surface image,bool draw=false);
+        std::vector<ci::Vec2f> findContours(ci::Surface image,bool draw=false);
         
         /**
          Returns a vector of targets within a specified set of contours points.
