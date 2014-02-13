@@ -24,15 +24,22 @@
 /**
  Common functionality that could be used 
  across all classes ought to go here.
+ 
+ These should all be static functions or variables.
  */
 
 namespace cxCv{
     /**
         Color used for debugging stuff.
-        Default is red
+        Default is yellow
      */
     static ci::Color debugColor = ci::Color(1,1,0);
     
+    
+    /**
+     Changes a cv::Mat to a grayscale image
+     if necessary.
+     */
     static cv::Mat toGray(cv::Mat img){
         cv::Mat thresh;
         if(img.channels() == 1) {
