@@ -13,7 +13,7 @@
 #include "cinder/params/Params.h"
 using namespace ci;
 /**
- Typedef contours to make things 
+ Typedef contours to make things
  easier to work with.
  */
 typedef struct{
@@ -43,9 +43,7 @@ namespace cxCv {
         //stores the contours found at each request.
         std::vector<std::vector<cv::Point> > allcontours;
         
-        //reference used for the cv::Mat used to find contours
         cv::Mat thresh;
-   
     public:
         Contours();
         static ContourRef create(){
@@ -58,13 +56,13 @@ namespace cxCv {
         void debugMode();
         
         /**
-         if we want debug mode to work, 
+         if we want debug mode to work,
          need to run this function
          */
         void setupDebug();
         /**
          Finds the contours of a image.
-        */
+         */
         std::vector<ci::Vec2f> findContours(ci::Surface image,bool draw=false);
         
         void drawContours();
@@ -76,7 +74,7 @@ namespace cxCv {
         
         /**
          Same thing but based on current minBlob and maxBlob
-        */
+         */
         ci::Vec2f findTarget();
         
         
@@ -86,7 +84,7 @@ namespace cxCv {
         ci::gl::Texture mCvTexture;
         
         VecSet getVectorFromContours(ContourSet set);
-      
+        
     };
     
 };//end namespace
