@@ -17,6 +17,7 @@
 */
 
 namespace cxCv {
+typedef std::shared_ptr<class VideoGrabber>VidGrabber;
     class VideoGrabber{
         //our main video grabber
         ci::CaptureRef grabber;
@@ -28,21 +29,25 @@ namespace cxCv {
         std::vector<ci::Capture::DeviceRef> devices;
         
         //texture used to display
-        ci::gl::Texture video_t;
-        
-        
-        
-        //need to make a surface so we can manipulate pixels
-        ci::Surface32f video_s;
+        ci::gl::TextureRef video_t;
         
         //used to store coordinates for where ot place texture
         ci::Vec3f loc;
+        
+        ci::Surface video_s;
     public:
         VideoGrabber();
         
+        static VidGrabber create(){
+            return VidGrabber(new VideoGrabber());
+        }
+        void setup();
         void update();
         void draw();
         
+        bool hasNewFrame();
+        ci::gl::TextureRef getTexture;
+        ci::Surface getSurface();
         ci::CaptureRef getGrabber();
         
     };

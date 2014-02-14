@@ -20,7 +20,7 @@ namespace cxCv{
         
         
         
-        debug = true;
+        debug = false;
     }
     
     void Contours::debugMode(){
@@ -104,12 +104,11 @@ namespace cxCv{
     /**
      Finds the contours in a image.
      */
-    void Contours::findContours(ci::Surface image,bool draw){
+    std::vector<ci::Vec2f> Contours::findContours(ci::Surface image,bool draw){
         cv::Mat img(ci::toOcv(image));
-        cv::Mat thresh;
         thresh = cxCv::toGray(img);
-        vector<vector<cv::Point> > allcontours;
         vector<Vec4i> hierarchy;
+        vector<Vec2f> returnpoints;
         
         //using edge detection at the same time gives us slightly better results.
         cv::Mat canny_output;
@@ -123,17 +122,34 @@ namespace cxCv{
         if(draw){
             vector<vector<cv::Point> >::iterator it;
             gl::pushMatrices();
+            
+            for(it = allcontours.begin();it != allcontours.end();++it){
+                vector<cv::Point> pt = *it;
+                vector<cv::Point>::iterator pts;
+                for(pts = pt.begin();pts != pt.end();++pts){
+              
+                    gl::color(Color(1,1,0));
+                    glPointSize(2.0f);
+                    glBegin(GL_POINTS);
+                    gl::vertex(ci::fromOcv(*pts));
+                    glEnd();
+              
+                }
+            }
+            gl::popMatrices();
+
+        }else{
+            vector<vector<cv::Point> >::iterator it;
+           
             for(it = allcontours.begin();it != allcontours.end();++it){
                 vector<cv::Point> pt = *it;
                 vector<cv::Point>::iterator pts;
                 for(pts = pt.begin();pts != pt.end();++pts){
                     
                     
-                    gl::drawSolidCircle(ci::fromOcv(*pts),2);
-                    //app::console()<<ci::fromOcv(*pts)<<endl;
+                    returnpoints.push_back(ci::fromOcv(*pts));
                 }
             }
-            gl::popMatrices();
 
         }
         
@@ -145,10 +161,40 @@ namespace cxCv{
                 app::console()<<"There was trouble drawing the params panel";
             }
         }
+        
+        return returnpoints;
     }
     
     
-   
+    void Contours::drawContours(){
+        vector<vector<cv::Point> >::iterator it;
+        gl::pushMatrices();
+        glPointSize(2.0f);
+        glBegin(GL_POINTS);
+        gl::color(cxCv::debugColor);
+        for(int i = 0;i<allcontours.size();i+=10){
+            vector<cv::Point> pt = allcontours.at(i);
+            vector<cv::Point>::iterator pts;
+            for(pts = pt.begin();pts != pt.end();++pts){
+                
+                
+                gl::vertex(ci::fromOcv(*pts));
+              
+            }
+        }
+          glEnd();
+        if(debug){
+            try{
+                mParams.draw();
+            }catch(...){
+                app::console()<<"There was trouble drawing the params panel";
+            }
+        }
+        
+
+        gl::popMatrices();
+
+    }
 
 
     

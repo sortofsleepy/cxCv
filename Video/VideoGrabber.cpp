@@ -19,6 +19,10 @@ namespace cxCv{
         //zero out the position
         loc = Vec3f::zero();
         
+        
+    }
+    
+    void VideoGrabber::setup(){
         //get all available devices
         devices = Capture::getDevices();
         
@@ -29,24 +33,48 @@ namespace cxCv{
             
             try{
                 if(device->checkAvailable()){
+                    
+                    //init capture system
                     grabber = Capture::create(width, height,device);
+                    
+                    //start getting video
+                    grabber->start();
+                    
+                    //write to the texture;
+                    video_t = gl::Texture::create(width,height);
                 }
             }catch(CaptureExc &){
                 app::console() << "Unable to initialize device: " << device->getName() << endl;
             }
         }
+
     }
     
     void VideoGrabber::update(){
         if(grabber->checkNewFrame()){
-            video_t = gl::Texture(grabber->getSurface());
+            video_s = grabber->getSurface();
+            video_t = gl::Texture::create(grabber->getSurface());
         }
         
     }
     
     void VideoGrabber::draw(){
-        gl::draw(video_t, Rectf(loc.x,loc.y,width,height));
+        gl::draw(video_t, Rectf(loc.x,loc.y,loc.x + width,loc.y+ height));
     }
+    
+    bool VideoGrabber::hasNewFrame(){
+        if(grabber->checkNewFrame()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    Surface VideoGrabber::getSurface(){
+        
+        return video_s;
+    }
+    
     CaptureRef VideoGrabber::getGrabber(){
         return grabber;
     }
