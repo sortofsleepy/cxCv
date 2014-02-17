@@ -14,7 +14,7 @@ using namespace std;
 namespace cxCv{
     
     Contours::Contours(){
-        threshold = 70.0f;
+        threshold = 128.0f;
         blobMin = 20.0f;
         blobMax = 80.0f;
         
@@ -100,16 +100,14 @@ namespace cxCv{
         return target;
     }
     
-
     /**
      Finds the contours in a image.
      */
     std::vector<ci::Vec2f> Contours::findContours(ci::Surface image,bool draw){
-        cv::Mat img(ci::toOcv(image));
+        cv::Mat img(ci::toOcv(Channel(image)));
         thresh = cxCv::toGray(img);
-        vector<Vec4i> hierarchy;
         vector<Vec2f> returnpoints;
-        
+        allcontours.clear();
         //using edge detection at the same time gives us slightly better results.
         cv::Mat canny_output;
         cv::Canny(thresh, canny_output, threshold, threshold *2,3);
@@ -146,7 +144,7 @@ namespace cxCv{
                 vector<cv::Point>::iterator pts;
                 for(pts = pt.begin();pts != pt.end();++pts){
                     
-                    
+                    contours.push_back(*pts);
                     returnpoints.push_back(ci::fromOcv(*pts));
                 }
             }
@@ -167,23 +165,26 @@ namespace cxCv{
     
     
     void Contours::drawContours(){
+        
         vector<vector<cv::Point> >::iterator it;
-        gl::pushMatrices();
+   
         glPointSize(2.0f);
         glBegin(GL_POINTS);
-        gl::color(cxCv::debugColor);
-        for(int i = 0;i<allcontours.size();i+=10){
-            vector<cv::Point> pt = allcontours.at(i);
+        gl::color(Color(1,1,90));
+        for(it = allcontours.begin();it != allcontours.end();++it){
+            vector<cv::Point> pt = *it;
             vector<cv::Point>::iterator pts;
             for(pts = pt.begin();pts != pt.end();++pts){
-                
-                
+                //app::console()<<ci::fromOcv(*pts)<<endl;
                 gl::vertex(ci::fromOcv(*pts));
-              
+
             }
         }
-          glEnd();
-        if(debug){
+
+        glEnd();
+        
+        
+             if(debug){
             try{
                 mParams.draw();
             }catch(...){
@@ -192,7 +193,6 @@ namespace cxCv{
         }
         
 
-        gl::popMatrices();
 
     }
 

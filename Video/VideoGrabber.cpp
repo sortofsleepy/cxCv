@@ -50,10 +50,14 @@ namespace cxCv{
 
     }
     
-    void VideoGrabber::update(){
+    bool VideoGrabber::update(){
         if(grabber->checkNewFrame()){
+            
             video_s = grabber->getSurface();
             video_t = gl::Texture::create(grabber->getSurface());
+            return true;
+        }else{
+            return false;
         }
         
     }
@@ -64,10 +68,11 @@ namespace cxCv{
     
     bool VideoGrabber::hasNewFrame(){
         if(grabber->checkNewFrame()){
-            return true;
-        }else{
-            return false;
+            
+            app::console()<<"new frame\n";
+        
         }
+        return false;
     }
     
     Surface VideoGrabber::getSurface(){

@@ -42,7 +42,7 @@ typedef std::shared_ptr<class VideoGrabber>VidGrabber;
             return VidGrabber(new VideoGrabber());
         }
         void setup();
-        void update();
+        bool update();
         void draw();
         
         bool hasNewFrame();

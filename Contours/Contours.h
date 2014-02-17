@@ -43,6 +43,8 @@ namespace cxCv {
         //stores the contours found at each request.
         std::vector<std::vector<cv::Point> > allcontours;
         
+        std::vector<cv::Point> contours;
+        
         cv::Mat thresh;
     public:
         Contours();
@@ -65,6 +67,7 @@ namespace cxCv {
          */
         std::vector<ci::Vec2f> findContours(ci::Surface image,bool draw=false);
         
+        //void findContours(ci::Surface image,bool draw=false);
         void drawContours();
         
         /**
