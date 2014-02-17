@@ -65,7 +65,7 @@ namespace cxCv {
         /**
          Finds the contours of a image.
          */
-        std::vector<ci::Vec2f> findContours(ci::Surface image,bool draw=false);
+        void findContours(ci::Surface image,bool draw=false);
         
         //void findContours(ci::Surface image,bool draw=false);
         void drawContours();

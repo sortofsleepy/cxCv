@@ -103,10 +103,10 @@ namespace cxCv{
     /**
      Finds the contours in a image.
      */
-    std::vector<ci::Vec2f> Contours::findContours(ci::Surface image,bool draw){
+    void Contours::findContours(ci::Surface image,bool draw){
         cv::Mat img(ci::toOcv(Channel(image)));
         thresh = cxCv::toGray(img);
-        vector<Vec2f> returnpoints;
+      
         allcontours.clear();
         //using edge detection at the same time gives us slightly better results.
         cv::Mat canny_output;
@@ -117,40 +117,6 @@ namespace cxCv{
 
         
         
-        if(draw){
-            vector<vector<cv::Point> >::iterator it;
-            gl::pushMatrices();
-            
-            for(it = allcontours.begin();it != allcontours.end();++it){
-                vector<cv::Point> pt = *it;
-                vector<cv::Point>::iterator pts;
-                for(pts = pt.begin();pts != pt.end();++pts){
-              
-                    gl::color(Color(1,1,0));
-                    glPointSize(2.0f);
-                    glBegin(GL_POINTS);
-                    gl::vertex(ci::fromOcv(*pts));
-                    glEnd();
-              
-                }
-            }
-            gl::popMatrices();
-
-        }else{
-            vector<vector<cv::Point> >::iterator it;
-           
-            for(it = allcontours.begin();it != allcontours.end();++it){
-                vector<cv::Point> pt = *it;
-                vector<cv::Point>::iterator pts;
-                for(pts = pt.begin();pts != pt.end();++pts){
-                    
-                    contours.push_back(*pts);
-                    returnpoints.push_back(ci::fromOcv(*pts));
-                }
-            }
-
-        }
-        
         
         if(debug){
             try{
@@ -160,7 +126,7 @@ namespace cxCv{
             }
         }
         
-        return returnpoints;
+        
     }
     
     
