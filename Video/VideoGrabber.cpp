@@ -19,6 +19,7 @@ namespace cxCv{
         //zero out the position
         loc = Vec3f::zero();
         
+        shouldMirror = true;
         
     }
     
@@ -61,14 +62,24 @@ namespace cxCv{
         }
 
     }
-    
+    void VideoGrabber::toggleMirror(){
+        if(shouldMirror){
+            shouldMirror = false;
+        }else if(!shouldMirror){
+            shouldMirror = true;
+        }
+    }
     bool VideoGrabber::update(){
         if(grabber->checkNewFrame()){
             
             video_s = grabber->getSurface();
             
             cv::Mat frame(ci::toOcv(grabber->getSurface()));
-            cv::flip(frame, frame, 1);
+            
+            if(shouldMirror){
+                cv::flip(frame, frame, 1);
+            }
+            
             video_t = gl::Texture::create(ci::fromOcv(frame));
             return true;
         }else{
@@ -76,23 +87,20 @@ namespace cxCv{
         }
         
     }
-    
+    bool VideoGrabber::mirror(){
+        if(shouldMirror){
+            return true;
+        }else{
+            return false;
+        }
+    }
     void VideoGrabber::draw(){
         gl::pushMatrices();
         gl::setMatricesWindow(app::getWindowSize());
         gl::draw(video_t, Rectf(loc.x,loc.y,loc.x + width,loc.y+ height));
         gl::popMatrices();
     }
-    
-    bool VideoGrabber::hasNewFrame(){
-        if(grabber->checkNewFrame()){
-            
-            app::console()<<"new frame\n";
-        
-        }
-        return false;
-    }
-    
+
     Surface VideoGrabber::getSurface(){
         
         return video_s;

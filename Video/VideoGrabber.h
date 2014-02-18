@@ -35,13 +35,16 @@ typedef std::shared_ptr<class VideoGrabber>VidGrabber;
         ci::Vec3f loc;
         
         ci::Surface video_s;
+        
+        //should we mirror the video? Default = true
+        bool shouldMirror;
     public:
         VideoGrabber();
-        
+        bool mirror();
         static VidGrabber create(){
             return VidGrabber(new VideoGrabber());
         }
-        
+        void toggleMirror();
         int32_t getWidth();
         int32_t getHeight();
         
@@ -50,7 +53,6 @@ typedef std::shared_ptr<class VideoGrabber>VidGrabber;
         bool update();
         void draw();
         
-        bool hasNewFrame();
         ci::gl::TextureRef getTexture;
         ci::Surface getSurface();
         ci::CaptureRef getGrabber();

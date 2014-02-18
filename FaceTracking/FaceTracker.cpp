@@ -110,13 +110,15 @@ namespace cxCv{
         }
         for( vector<Rectf>::const_iterator faceIter = mFaces.begin(); faceIter != mFaces.end(); ++faceIter ){
             
-            //since the video is flipped to mirror viewer,
-            //need to do some additional math to re-calculate face position.
-            Vec2f flipped = (faceIter->getCenter());
-            flipped.x  = (grabber->get()->getWidth()) - flipped.x;
-            
-
-            gl::drawSolidCircle(flipped, 100.0f);
+            if(grabber->get()->mirror()){
+                //since the video is flipped to mirror viewer,
+                //need to do some additional math to re-calculate face position.
+                Vec2f flipped = (faceIter->getCenter());
+                flipped.x  = (grabber->get()->getWidth()) - flipped.x;
+                gl::drawSolidCircle(flipped, 100.0f);
+            }else{
+                gl::drawSolidCircle(faceIter->getCenter(), 100.0f);
+            }
            // gl::drawSolidRect( *faceIter );
         }
         
