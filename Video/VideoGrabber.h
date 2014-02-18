@@ -41,6 +41,11 @@ typedef std::shared_ptr<class VideoGrabber>VidGrabber;
         static VidGrabber create(){
             return VidGrabber(new VideoGrabber());
         }
+        
+        int32_t getWidth();
+        int32_t getHeight();
+        
+        ci::Vec2i getDimensions();
         void setup();
         bool update();
         void draw();

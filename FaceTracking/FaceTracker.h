@@ -11,7 +11,7 @@
 
 
 #include "cxCv.h"
-
+#include "VideoGrabber.h"
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -25,6 +25,8 @@ class FaceTracker{
     cv::CascadeClassifier	mFaceCascade, mEyeCascade;
 	vector<Rectf>			mFaces, mEyes;
     
+    //Refrence to the VideoGrabber thats providing the feed
+    VidGrabber * grabber;
     bool debug;
 public:
     FaceTracker();
@@ -38,8 +40,13 @@ public:
     void toggleDebug();
     void setup();
     void setup(std::string facepath, std::string eyepath);
-    void update(Surface image);
+    void update(VidGrabber &capture);
     virtual void draw();
+    
+    /**
+     Checks to see if anything has interacted with our face.
+     */
+    void checkHit(Vec2f position);
 };
     
 } // end namespace

@@ -44,7 +44,10 @@ namespace cxCv{
     /**
      Update the tracker with new data.
      */
-    void FaceTracker::update(Surface image){
+    void FaceTracker::update(VidGrabber &capture){
+        grabber = &capture;
+        Surface image = capture->getSurface();
+        
         //might work better on a newer computer but on a older one like
         //mine, the scale needs to be > 4 and < 10
     	const int calcScale = 6;
@@ -105,10 +108,24 @@ namespace cxCv{
             // draw the faces as transparent yellow rectangles
             gl::color( ColorA( 1, 1, 0, 0.45f ) );
         }
-        for( vector<Rectf>::const_iterator faceIter = mFaces.begin(); faceIter != mFaces.end(); ++faceIter )
-		gl::drawSolidRect( *faceIter );
+        for( vector<Rectf>::const_iterator faceIter = mFaces.begin(); faceIter != mFaces.end(); ++faceIter ){
+            
+            //since the video is flipped to mirror viewer,
+            //need to do some additional math to re-calculate face position.
+            Vec2f flipped = (faceIter->getCenter());
+            flipped.x  = (grabber->get()->getWidth()) - flipped.x;
+            
+
+            gl::drawSolidCircle(flipped, 100.0f);
+           // gl::drawSolidRect( *faceIter );
+        }
         
         gl::popMatrices();
 
+    }
+    
+    
+    void FaceTracker::checkHit(Vec2f position){
+        
     }
 }; // end namespace

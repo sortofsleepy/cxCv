@@ -22,6 +22,18 @@ namespace cxCv{
         
     }
     
+    int32_t VideoGrabber::getWidth(){
+        return width;
+    }
+    
+    int32_t VideoGrabber::getHeight(){
+        return height;
+    }
+    
+    Vec2i VideoGrabber::getDimensions(){
+        return Vec2i(width,height);
+    }
+    
     void VideoGrabber::setup(){
         //get all available devices
         devices = Capture::getDevices();
@@ -54,7 +66,10 @@ namespace cxCv{
         if(grabber->checkNewFrame()){
             
             video_s = grabber->getSurface();
-            video_t = gl::Texture::create(grabber->getSurface());
+            
+            cv::Mat frame(ci::toOcv(grabber->getSurface()));
+            cv::flip(frame, frame, 1);
+            video_t = gl::Texture::create(ci::fromOcv(frame));
             return true;
         }else{
             return false;
@@ -63,7 +78,10 @@ namespace cxCv{
     }
     
     void VideoGrabber::draw(){
+        gl::pushMatrices();
+        gl::setMatricesWindow(app::getWindowSize());
         gl::draw(video_t, Rectf(loc.x,loc.y,loc.x + width,loc.y+ height));
+        gl::popMatrices();
     }
     
     bool VideoGrabber::hasNewFrame(){
