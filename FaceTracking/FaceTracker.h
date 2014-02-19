@@ -28,6 +28,12 @@ class FaceTracker{
     //Refrence to the VideoGrabber thats providing the feed
     VidGrabber * grabber;
     bool debug;
+    
+    //reference to the current position of the face.
+    ci::Vec2f face;
+    
+    //diameter at which to draw the face(which is assumed to be round)
+    float faceSize;
 public:
     FaceTracker();
     
@@ -46,7 +52,7 @@ public:
     /**
      Checks to see if anything has interacted with our face.
      */
-    void checkHit(Vec2f position);
+    bool checkHit(Vec2f position);
 };
     
 } // end namespace

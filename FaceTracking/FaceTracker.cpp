@@ -7,12 +7,14 @@
 //
 
 #include "FaceTracker.h"
+#include "cinder/Rand.h"
 using namespace ci;
 
 namespace cxCv{
     
     FaceTracker::FaceTracker(){
         debug = false;
+        faceSize = 100.0f;
     }
     
     void FaceTracker::toggleDebug(){
@@ -113,11 +115,12 @@ namespace cxCv{
             if(grabber->get()->mirror()){
                 //since the video is flipped to mirror viewer,
                 //need to do some additional math to re-calculate face position.
-                Vec2f flipped = (faceIter->getCenter());
-                flipped.x  = (grabber->get()->getWidth()) - flipped.x;
-                gl::drawSolidCircle(flipped, 100.0f);
+                face= (faceIter->getCenter());
+                face.x  = (grabber->get()->getWidth()) - face.x;
+                gl::drawSolidCircle(face, 100.0f);
+                
             }else{
-                gl::drawSolidCircle(faceIter->getCenter(), 100.0f);
+                gl::drawSolidCircle(faceIter->getCenter(), faceSize);
             }
            // gl::drawSolidRect( *faceIter );
         }
@@ -127,7 +130,12 @@ namespace cxCv{
     }
     
     
-    void FaceTracker::checkHit(Vec2f position){
-        
+    bool FaceTracker::checkHit(Vec2f position){
+        Vec2f dist = face - position;
+        if(dist.length() < faceSize){
+            return true;
+        }else{
+            return false;
+        }
     }
 }; // end namespace

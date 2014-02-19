@@ -87,6 +87,10 @@ namespace cxCv{
         }
         
     }
+    
+    /**
+     Is the video being mirrored?
+     */
     bool VideoGrabber::mirror(){
         if(shouldMirror){
             return true;
